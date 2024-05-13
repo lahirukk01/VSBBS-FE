@@ -1,12 +1,19 @@
+import {useState} from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 
-import AuthForm from '~/components/AuthForm.tsx';
+import AuthForm from '~/components/AuthForm/AuthForm.tsx';
 
 const Landing = () => {
+  const [selectedTab, setSelectedTab] = useState<string>('Login');
+
+  const handleTabChange = (tabName: string | null) => {
+    setSelectedTab(tabName ?? 'Login');
+  };
+
   return (
     <Container>
       <Row className="mb-lg-5 mt-4">
@@ -20,12 +27,13 @@ const Landing = () => {
             defaultActiveKey="Login"
             id="uncontrolled-tab-example"
             className="mb-3 d-flex justify-content-center"
+            onSelect={handleTabChange}
           >
             <Tab eventKey="Login" title="Login">
-              <AuthForm />
+              {selectedTab === 'Login' && <AuthForm />}
             </Tab>
             <Tab eventKey="Register" title="Register">
-              <AuthForm registration />
+              {selectedTab !== 'Login' && <AuthForm registration />}
             </Tab>
           </Tabs>
         </Col>
