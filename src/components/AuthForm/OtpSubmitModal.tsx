@@ -1,5 +1,5 @@
-import Modal from "react-bootstrap/Modal";
-import {useState} from "react";
+import Modal from 'react-bootstrap/Modal';
+import {useState} from 'react';
 
 type TOtpSubmitModalProps = {
   show: boolean;
@@ -16,13 +16,13 @@ const OtpSubmitModal = ({ show, handleClose, handleSubmit }: TOtpSubmitModalProp
     if (/^\d*$/.test(value)) {
       setOtp(value);
     }
-  }
+  };
 
   const handleOtpSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     handleSubmit(otp);
     setOtp('');
-  }
+  };
 
   return (
     <Modal show={show} onHide={handleClose} backdrop="static">
