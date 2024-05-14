@@ -12,6 +12,11 @@ export type TRegistrationDetails = TLoginCredentials & {
   email: string;
 };
 
+export type TOtpSubmitRequestPayload = {
+  otp: string;
+  ownerIdentifier: string;
+};
+
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8765/registration-service/auth/' }),
@@ -30,7 +35,18 @@ export const authApi = createApi({
         body: details,
       }),
     }),
+    submitRegistrationOtp: builder.mutation({
+      query: (payload: TOtpSubmitRequestPayload) => ({
+        url: 'registration/customer/otp',
+        method: 'POST',
+        body: payload,
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation, useCustomerRegistrationMutation } = authApi;
+export const {
+  useLoginMutation,
+  useCustomerRegistrationMutation,
+  useSubmitRegistrationOtpMutation,
+} = authApi;

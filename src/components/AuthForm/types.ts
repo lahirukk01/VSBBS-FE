@@ -6,3 +6,17 @@ export type TAuthFormFields = {
   formUsername: { value: string };
   formBasicPassword: { value: string };
 };
+
+export type TOtpGenerateResponse = {
+  data: {
+    ownerIdentifier: string;
+    message: string;
+  },
+  error: null;
+};
+
+export type TOtpSubmitResponseData = {
+  data: {
+    token: string;
+  }
+};

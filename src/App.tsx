@@ -1,10 +1,11 @@
 import '~/App.css';
 
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Provider } from 'react-redux';
 
 import Landing from '~/pages/Landing.tsx';
-import { Provider } from 'react-redux';
 import { store } from '~/store/store.ts';
+import Home from "~/pages/Home.tsx";
 
 const App = () => {
 
@@ -13,6 +14,7 @@ const App = () => {
       <Router>
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/home" element={<Home />} />
         </Routes>
       </Router>
     </Provider>
