@@ -1,9 +1,15 @@
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import Alert from "react-bootstrap/Alert";
+import Alert from 'react-bootstrap/Alert';
 import {useState} from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import {TAuthFormFields, TOtpGenerateResponse, TOtpSubmitResponseData} from '~/components/AuthForm/types.ts';
+import {
+  TAuthFormFields,
+  TJwtPayload,
+  TOtpGenerateResponse,
+  TOtpSubmitResponseData
+} from '~/components/AuthForm/types.ts';
 import {
   TLoginCredentials,
   TRegistrationDetails,
@@ -11,13 +17,17 @@ import {
   useLoginMutation, useSubmitRegistrationOtpMutation
 } from '~/store/AuthApiSlice.ts';
 import {TErrorResponse} from '~/types/common.ts';
-import OtpSubmitModal from "~/components/AuthForm/OtpSubmitModal.tsx";
-import {getJwtPayload} from "~/helpers/common.ts";
+import OtpSubmitModal from '~/components/AuthForm/OtpSubmitModal.tsx';
+import {ROUTE_BUILDER} from '~/constants.ts';
+import {storeSessionData} from '~/components/AuthForm/common.ts';
+import RegistrationSpecificFields from '~/components/AuthForm/RegistrationSpecificFields.tsx';
 
 const AuthForm = ({registration = false}) => {
-  const [login] = useLoginMutation();
-  const [customerRegistration] = useCustomerRegistrationMutation();
+  const [login, { isLoading: isLoginOngoing}] = useLoginMutation();
+  const [customerRegistration, { isLoading: isRegistrationOngoing}] = useCustomerRegistrationMutation();
   const [submitRegistrationOtp] = useSubmitRegistrationOtpMutation();
+
+  const navigate = useNavigate();
 
   const [submitError, setSubmitError] = useState<string>('');
   const [ownerIdentifier, setOwnerIdentifier] = useState<string>('');
@@ -34,15 +44,10 @@ const AuthForm = ({registration = false}) => {
     try {
       const otpSubmitResponse = await submitRegistrationOtp({ otp, ownerIdentifier });
       const otpSubmitResponseData = otpSubmitResponse.data as TOtpSubmitResponseData;
-      const decodedToken = getJwtPayload(otpSubmitResponseData.data.token);
-      const payloadToStore = {
-        bearerToken: otpSubmitResponseData.data.token,
-        data: decodedToken
-      };
-
-      localStorage.setItem('vsbbaAuth', JSON.stringify(payloadToStore));
-      setShowRegistrationSuccess(true);
-      console.log('OTP submit response: ', decodedToken);
+      const claims: TJwtPayload = storeSessionData(otpSubmitResponseData);
+      // setShowRegistrationSuccess(true);
+      // console.log('OTP submit response: ', decodedToken);
+      navigate(ROUTE_BUILDER[claims.scope[0]].HOME);
     } catch (error) {
       console.error('Failed to submit OTP: ', error);
       displayError(error);
@@ -50,7 +55,7 @@ const AuthForm = ({registration = false}) => {
       setOwnerIdentifier('');
     }
     console.log('OTP submitted: ', otp);
-  }
+  };
 
   const processRegistration = async (details: TRegistrationDetails) => {
     try {
@@ -65,8 +70,10 @@ const AuthForm = ({registration = false}) => {
 
   const processLogin = async ({ username, password }: TLoginCredentials) => {
     try {
-      const result = await login({ username, password }).unwrap();
+      const result: TOtpSubmitResponseData = await login({ username, password }).unwrap();
       console.log('Login successful: ', result);
+      const claims = storeSessionData(result);
+      navigate(ROUTE_BUILDER[claims.scope[0]].HOME);
     } catch (error) {
       console.error('Failed to login: ', error);
       displayError(error);
@@ -104,27 +111,7 @@ const AuthForm = ({registration = false}) => {
   return (
     <>
       <Form onSubmit={handleSubmit}>
-        {registration && (<>
-          <Form.Group className="mb-3" controlId="formFirstName">
-            <Form.Label>First Name</Form.Label>
-            <Form.Control type="text" placeholder="Enter first name" />
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formLastName">
-            <Form.Label>Last Name</Form.Label>
-            <Form.Control type="text" placeholder="Enter last name" />
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formMobileNumber">
-            <Form.Label>Mobile Number</Form.Label>
-            <Form.Control type="tel" placeholder="Enter mobile number" />
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formEmail">
-            <Form.Label>Email</Form.Label>
-            <Form.Control type="email" placeholder="Enter email" />
-          </Form.Group>
-        </>)}
+        {registration && <RegistrationSpecificFields />}
 
         <Form.Group className="mb-3" controlId="formUsername">
           <Form.Label>Username</Form.Label>
@@ -136,7 +123,11 @@ const AuthForm = ({registration = false}) => {
           <Form.Control type="password" required placeholder="Password" />
         </Form.Group>
 
-        <Button variant="primary" type="submit">
+        <Button
+          variant="primary"
+          type="submit"
+          disabled={isLoginOngoing || isRegistrationOngoing}
+        >
           Submit
         </Button>
 

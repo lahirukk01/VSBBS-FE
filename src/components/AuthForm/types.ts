@@ -20,3 +20,22 @@ export type TOtpSubmitResponseData = {
     token: string;
   }
 };
+
+export type TLoginResponseData = TOtpSubmitResponseData;
+
+export type TScope = 'MANAGER' | 'CUSTOMER';
+
+export type TJwtPayload = {
+  sub: string,
+  iat: number,
+  exp: number,
+  iss: string,
+  scope: TScope[],
+  onlineAccountStatus: string,
+  userId: string | number,
+};
+
+export type AuthComponentProps = {
+  auth: TJwtPayload;
+  logout: () => void;
+};

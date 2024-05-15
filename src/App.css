@@ -7,3 +7,8 @@
     width: 50%;
     margin: auto;
 }
+
+.app-link {
+    text-decoration: none;
+    color: inherit;
+}
