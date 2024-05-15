@@ -7,8 +7,8 @@ export const SCOPE: { [key: string]: TScope } = {
 
 type TRoutes = {
   [key in TScope]: {
-    HOME: string;
-    // PROFILE: string;
+    // HOME: string;
+    PROFILE: string;
     ACCOUNTS?: string;
     BENEFICIARIES: string;
     LOANS: string;
@@ -17,16 +17,19 @@ type TRoutes = {
 
 export const ROUTE_BUILDER: TRoutes = {
   MANAGER: {
-    HOME: '/manager/home',
-    // PROFILE: '/manager/profile',
+    // HOME: '/manager/home',
+    PROFILE: '/manager/profile',
     BENEFICIARIES: '/manager/beneficiaries',
     LOANS: '/manager/loans',
   },
   CUSTOMER: {
-    HOME: '/customer/home',
-    // PROFILE: '/customer/profile',
+    // HOME: '/customer/home',
+    PROFILE: '/customer/profile',
     ACCOUNTS: '/customer/accounts',
     BENEFICIARIES: '/customer/beneficiaries',
     LOANS: '/customer/loans',
   },
 };
+
+export const BASE_URL = window.location.hostname.includes('localhost')
+  ? 'http://localhost:8765' : 'https://api.lkksoftdev.xyz';

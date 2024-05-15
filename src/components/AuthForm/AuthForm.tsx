@@ -19,13 +19,13 @@ import {
 import {TErrorResponse} from '~/types/common.ts';
 import OtpSubmitModal from '~/components/AuthForm/OtpSubmitModal.tsx';
 import {ROUTE_BUILDER} from '~/constants.ts';
-import {storeSessionData} from '~/components/AuthForm/common.ts';
+import {storeSessionData} from '~/components/AuthForm/helpers.ts';
 import RegistrationSpecificFields from '~/components/AuthForm/RegistrationSpecificFields.tsx';
 
 const AuthForm = ({registration = false}) => {
   const [login, { isLoading: isLoginOngoing}] = useLoginMutation();
   const [customerRegistration, { isLoading: isRegistrationOngoing}] = useCustomerRegistrationMutation();
-  const [submitRegistrationOtp] = useSubmitRegistrationOtpMutation();
+  const [submitRegistrationOtp, { isLoading: isOtpSubmissionOngoing }] = useSubmitRegistrationOtpMutation();
 
   const navigate = useNavigate();
 
@@ -42,12 +42,12 @@ const AuthForm = ({registration = false}) => {
 
   const handleOtpSubmit = async (otp: string) => {
     try {
-      const otpSubmitResponse = await submitRegistrationOtp({ otp, ownerIdentifier });
+      const otpSubmitResponse = await submitRegistrationOtp({ otp, ownerIdentifier }).unwrap();
       const otpSubmitResponseData = otpSubmitResponse.data as TOtpSubmitResponseData;
       const claims: TJwtPayload = storeSessionData(otpSubmitResponseData);
       // setShowRegistrationSuccess(true);
       // console.log('OTP submit response: ', decodedToken);
-      navigate(ROUTE_BUILDER[claims.scope[0]].HOME);
+      navigate(ROUTE_BUILDER[claims.scope[0]].PROFILE);
     } catch (error) {
       console.error('Failed to submit OTP: ', error);
       displayError(error);
@@ -73,7 +73,7 @@ const AuthForm = ({registration = false}) => {
       const result: TOtpSubmitResponseData = await login({ username, password }).unwrap();
       console.log('Login successful: ', result);
       const claims = storeSessionData(result);
-      navigate(ROUTE_BUILDER[claims.scope[0]].HOME);
+      navigate(ROUTE_BUILDER[claims.scope[0]].PROFILE);
     } catch (error) {
       console.error('Failed to login: ', error);
       displayError(error);
@@ -149,8 +149,9 @@ const AuthForm = ({registration = false}) => {
       </Form>
       <OtpSubmitModal
         show={ownerIdentifier !== ''}
-        handleClose={handlerOtpSubmitModalClose}
-        handleSubmit={handleOtpSubmit}
+        onClose={handlerOtpSubmitModalClose}
+        onSubmit={handleOtpSubmit}
+        disableSubmit={isOtpSubmissionOngoing}
       />
     </>
     );

@@ -21,8 +21,6 @@ export type TOtpSubmitResponseData = {
   }
 };
 
-export type TLoginResponseData = TOtpSubmitResponseData;
-
 export type TScope = 'MANAGER' | 'CUSTOMER';
 
 export type TJwtPayload = {
@@ -32,10 +30,11 @@ export type TJwtPayload = {
   iss: string,
   scope: TScope[],
   onlineAccountStatus: string,
-  userId: string | number,
+  userId: number,
 };
 
 export type AuthComponentProps = {
   auth: TJwtPayload;
+  setAuth: (auth: TJwtPayload) => void;
   logout: () => void;
 };

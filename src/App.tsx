@@ -9,6 +9,7 @@ import Landing from '~/pages/Landing.tsx';
 import Home from '~/pages/Home.tsx';
 import Layout from '~/components/layout/Layout.tsx';
 import NotFound from '~/pages/NotFound.tsx';
+import CustomerProfile from '~/pages/CustomerProfile.tsx';
 
 const App = () => {
 
@@ -17,8 +18,10 @@ const App = () => {
       <Router>
         <Routes>
           <Route path="/" element={<Landing />} />
-          <Route path={ROUTE_BUILDER.CUSTOMER.HOME} element={<Layout />} />
-          <Route path={ROUTE_BUILDER.MANAGER.HOME} element={<Home />} />
+          <Route path="/customer" element={<Layout />}>
+            <Route path="profile" element={<CustomerProfile />} />
+          </Route>
+          <Route path={ROUTE_BUILDER.MANAGER.PROFILE} element={<Home />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>

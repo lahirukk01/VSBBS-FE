@@ -3,11 +3,12 @@ import {useState} from 'react';
 
 type TOtpSubmitModalProps = {
   show: boolean;
-  handleClose: () => void;
-  handleSubmit: (otp: string) => void;
+  onClose: () => void;
+  onSubmit: (otp: string) => void;
+  disableSubmit: boolean;
 };
 
-const OtpSubmitModal = ({ show, handleClose, handleSubmit }: TOtpSubmitModalProps) => {
+const OtpSubmitModal = ({ show, onClose, onSubmit, disableSubmit = false }: TOtpSubmitModalProps) => {
   const [otp, setOtp] = useState<string>('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,12 +21,12 @@ const OtpSubmitModal = ({ show, handleClose, handleSubmit }: TOtpSubmitModalProp
 
   const handleOtpSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    handleSubmit(otp);
+    onSubmit(otp);
     setOtp('');
   };
 
   return (
-    <Modal show={show} onHide={handleClose} backdrop="static">
+    <Modal show={show} onHide={onClose} backdrop="static">
       <Modal.Header closeButton>
         <Modal.Title>OTP Submission</Modal.Title>
       </Modal.Header>
@@ -41,7 +42,11 @@ const OtpSubmitModal = ({ show, handleClose, handleSubmit }: TOtpSubmitModalProp
               name="otp"
               value={otp} />
           </div>
-          <button type="submit" className="btn btn-primary">
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={disableSubmit || otp.length < 6}
+          >
             Submit
           </button>
         </form>

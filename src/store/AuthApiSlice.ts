@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import {buildBaseUrl} from '~/store/helpers.ts';
 
 export type TLoginCredentials = {
   username: string;
@@ -19,7 +20,7 @@ export type TOtpSubmitRequestPayload = {
 
 export const authApi = createApi({
   reducerPath: 'authApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8765/registration-service/auth/' }),
+  baseQuery: fetchBaseQuery({ baseUrl: buildBaseUrl('registration-service/auth/') }),
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (credentials: TLoginCredentials) => ({
