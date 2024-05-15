@@ -17,7 +17,7 @@ const Component: React.FC<AuthComponentProps> = ({ auth, logout, setAuth }) => {
   const { pathname } = useLocation();
 
   const { data, error, isLoading } = useFetchUserQuery(auth.userId);
-  console.log('Fetch User: ', {data, isLoading, error});
+
   const userRoutes = ROUTE_BUILDER[auth.scope[0]];
 
   if (isLoading) return <LoadingOverlay show={isLoading} />;

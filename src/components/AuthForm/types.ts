@@ -35,6 +35,6 @@ export type TJwtPayload = {
 
 export type AuthComponentProps = {
   auth: TJwtPayload;
-  setAuth: (auth: TJwtPayload) => void;
+  setAuth: (value: TJwtPayload | ((prevState: TJwtPayload | null) => TJwtPayload | null) | null) => void;
   logout: () => void;
 };
