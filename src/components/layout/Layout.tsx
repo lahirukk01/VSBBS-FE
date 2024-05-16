@@ -44,7 +44,7 @@ const Component: React.FC<AuthComponentProps> = ({ auth, logout, setAuth }) => {
         </Col>
       </Row>
       <Row className="flex-grow-1">
-        <Col xs={3} className="bg-dark">
+        <Col xs={2} className="bg-dark">
           <h3 className="text-white">Menu</h3>
           <Stack gap={3}>
             <div
@@ -72,7 +72,7 @@ const Component: React.FC<AuthComponentProps> = ({ auth, logout, setAuth }) => {
             <div className="p-2 text-white"><Button variant="success" onClick={logout}>Logout</Button></div>
           </Stack>
         </Col>
-        <Col xs={9} style={{ backgroundColor: '#DDDDDD' }}>
+        <Col xs={10} style={{ backgroundColor: '#DDDDDD' }}>
           <Outlet context={{ auth, user, setAuth }} />
         </Col>
       </Row>
