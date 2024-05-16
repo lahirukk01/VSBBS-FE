@@ -11,6 +11,7 @@ export type TFetchAccountsRequestParams = {
     onDate: string | null;
     fromDate: string | null;
     toDate: string | null;
+    page: number;
   };
 };
 

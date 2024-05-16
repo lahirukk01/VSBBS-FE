@@ -7,15 +7,12 @@ import {TFetchAccountsRequestParams, useFetchAccountTransactionsQuery} from '~/s
 import {Form, InputGroup} from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import TransactionsTable from '~/pages/customer-accounts/TransactionsTable.tsx';
+import TablePagination from '~/pages/customer-accounts/TablePagination.tsx';
 
 const AccountDetails = ({ account, customerId }: TAccountDetailsProps) => {
   const [fetchTransactionsParams, setFetchTransactionsParams] = useState<TFetchAccountsRequestParams>({
     pathParams: { customerId, accountId: account.id },
-    queryParams: {
-      onDate: '',
-      fromDate: '',
-      toDate: '',
-    }
+    queryParams: { onDate: '', fromDate: '',  toDate: '', page: 0 }
   });
   const [onDate, setOnDate] = useState<string>('');
   const [fromDate, setFromDate] = useState<string>('');
@@ -26,11 +23,7 @@ const AccountDetails = ({ account, customerId }: TAccountDetailsProps) => {
 
   useEffect(() => {
     setFetchTransactionsParams({
-      queryParams: {
-        onDate: '',
-        fromDate: '',
-        toDate: '',
-      },
+      queryParams: { onDate: '', fromDate: '', toDate: '', page: 0 },
       pathParams: { customerId, accountId: account.id }
     });
   }, [account.id, customerId]);
@@ -56,11 +49,14 @@ const AccountDetails = ({ account, customerId }: TAccountDetailsProps) => {
   const handleOnSearch = () => {
     setFetchTransactionsParams((prev) => ({
       ...prev,
-      queryParams: {
-        onDate: onDate || '',
-        fromDate: fromDate || '',
-        toDate: toDate || '',
-      }
+      queryParams: { onDate: onDate || '', fromDate: fromDate || '', toDate: toDate || '', page: 0 }
+    }));
+  };
+
+  const handlePageChange = (page: number) => {
+    setFetchTransactionsParams((prev) => ({
+      ...prev,
+      queryParams: { onDate: onDate || '', fromDate: fromDate || '', toDate: toDate || '', page }
     }));
   };
 
@@ -68,7 +64,9 @@ const AccountDetails = ({ account, customerId }: TAccountDetailsProps) => {
     console.error('Error when fetching account transactions: ', error);
   }
 
-  const transactions = data ? (data as TFetchAccountTransactionsResponse).data.transactions : [];
+  const responseData = data ?
+    (data as TFetchAccountTransactionsResponse).data : { transactions: [], totalPages: 0, currentPage: 0 };
+  const { transactions, totalPages, currentPage } = responseData;
   const disableSearch = (!onDate && !fromDate && !toDate) || isLoading;
 
   return (
@@ -141,6 +139,11 @@ const AccountDetails = ({ account, customerId }: TAccountDetailsProps) => {
         </Row>
         <Row className="mt-3">
           <TransactionsTable transactions={transactions} />
+          {totalPages > 0 && <TablePagination
+            totalPages={totalPages}
+            currentPage={currentPage + 1}
+            onPageChange={handlePageChange}
+          />}
         </Row>
       </Row>
     </Row>

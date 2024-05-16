@@ -26,7 +26,7 @@ const CustomerAccounts = () => {
   }
 
   const accounts = (data as TAccountFetchResponse).data.accounts;
-  console.log(accounts);
+
   return (
     <Container>
       <Row>
@@ -37,7 +37,7 @@ const CustomerAccounts = () => {
             <th>Account ID</th>
             <th>Account Type</th>
             <th>Balance</th>
-            <th>View Details</th>
+            <th>View Transactions</th>
           </tr>
           </thead>
           <tbody>
@@ -46,7 +46,7 @@ const CustomerAccounts = () => {
               <td>{account.id}</td>
               <td>{account.accountType}</td>
               <td>{account.balance.toFixed(2)}</td>
-              <td><Button onClick={() => setSelectedAccount(account)}>Select Account</Button></td>
+              <td><Button onClick={() => setSelectedAccount(account)}>Select</Button></td>
             </tr>
           ))}
           </tbody>

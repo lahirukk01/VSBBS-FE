@@ -30,8 +30,12 @@ export type TTransaction = {
   createdAt: string;
 };
 
+export type TFetchAccountTransactionsResponseData = {
+  totalPages: number;
+  currentPage: number;
+  transactions: TTransaction[];
+}
+
 export type TFetchAccountTransactionsResponse = {
-  data: {
-    transactions: TTransaction[];
-  }
+  data: TFetchAccountTransactionsResponseData
 }
