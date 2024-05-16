@@ -10,6 +10,7 @@ import Home from '~/pages/Home.tsx';
 import Layout from '~/components/layout/Layout.tsx';
 import NotFound from '~/pages/NotFound.tsx';
 import CustomerProfile from '~/pages/CustomerProfile.tsx';
+import CustomerAccounts from '~/pages/customer-accounts/CustomerAccounts.tsx';
 
 const App = () => {
 
@@ -20,6 +21,7 @@ const App = () => {
           <Route path="/" element={<Landing />} />
           <Route path="/customer" element={<Layout />}>
             <Route path="profile" element={<CustomerProfile />} />
+            <Route path="accounts" element={<CustomerAccounts />} />
           </Route>
           <Route path={ROUTE_BUILDER.MANAGER.PROFILE} element={<Home />} />
           <Route path="*" element={<NotFound />} />

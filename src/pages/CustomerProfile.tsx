@@ -15,8 +15,8 @@ const CustomerProfile = () => {
   const { auth, user, setAuth } = useOutletContext<TOutletContext>();
 
   const [ownerIdentifier, setOwnerIdentifier] = useState<string>('');
-
   const [showOtpSubmitModal, setShowOtpSubmitModal] = useState(false);
+
   const [activateProfile, { isLoading }] = useActivateProfileMutation();
   const [submitProfileUpdateOtp, { isLoading: isSubmitProfileUpdateOtpOngoing}] = useSubmitProfileUpdateOtpMutation();
 

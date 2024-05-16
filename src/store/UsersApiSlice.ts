@@ -1,5 +1,5 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
-import {buildBaseUrl} from '~/store/helpers.ts';
+import {addAuthHeader, buildBaseUrl} from '~/store/helpers.ts';
 import {TUser} from '~/types/common.ts';
 import {TOtpSubmitRequestPayload} from '~/store/AuthApiSlice.ts';
 
@@ -16,16 +16,7 @@ export const usersApi = createApi({
   reducerPath: 'usersApi',
   baseQuery: fetchBaseQuery({
     baseUrl: buildBaseUrl('registration-service/users/'),
-    prepareHeaders: (headers) => {
-      // Use Redux's `getState` function to access the current state
-      const appData = JSON.parse(localStorage.getItem('vsbbaAuth') || '{}');
-      const token = appData.bearerToken;
-      // If the token exists, set it in the Authorization header
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
-      }
-      return headers;
-    },
+    prepareHeaders: addAuthHeader,
   }),
   endpoints: (builder) => ({
     fetchUser: builder.query({
