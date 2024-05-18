@@ -2,7 +2,12 @@ import {TScope} from '~/components/AuthForm/types.ts';
 import NotFound from '~/pages/NotFound.tsx';
 import useAuth from '~/hooks/useAuth.ts';
 
-const WithAuth = (allowedScopes: TScope[], Component: React.FC<any>) => {
+type TWithAuthProps = {
+  allowedScopes: TScope[],
+  Component: React.FC<any>
+};
+
+const WithAuth = ({allowedScopes, Component}: TWithAuthProps) => {
   const AuthComponent: React.FC = (props) => {
     const {auth, setAuth, logout} = useAuth();
 
@@ -14,7 +19,7 @@ const WithAuth = (allowedScopes: TScope[], Component: React.FC<any>) => {
     return <Component {...props} auth={auth} logout={logout} setAuth={setAuth}/>;
   };
 
-  return AuthComponent;
+  return <AuthComponent />;
 };
 
 export default WithAuth;

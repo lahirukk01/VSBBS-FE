@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import {Link, useLocation, Outlet} from 'react-router-dom';
 import cn from 'classnames';
 
-import {AuthComponentProps} from '~/components/AuthForm/types.ts';
+import {AuthComponentProps, TScope} from '~/components/AuthForm/types.ts';
 import {ROUTE_BUILDER, SCOPE} from '~/constants.ts';
 import WithAuth from '~/hoc/WithAuth.tsx';
 import {TUserFetchResponseSuccess, useFetchUserQuery} from '~/store/UsersApiSlice.ts';
@@ -80,6 +80,6 @@ const Component: React.FC<AuthComponentProps> = ({ auth, logout, setAuth }) => {
   );
 };
 
-const Layout = WithAuth([SCOPE.CUSTOMER, SCOPE.MANAGER], Component);
+const Layout = ({ scope }: {scope: TScope}) => <WithAuth allowedScopes={[scope]} Component={Component} />;
 
 export default Layout;

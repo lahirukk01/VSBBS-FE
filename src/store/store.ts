@@ -3,6 +3,7 @@ import authReducer from '~/store/AuthSlice';
 import { authApi } from '~/store/AuthApiSlice';
 import { usersApi } from '~/store/UsersApiSlice.ts';
 import {accountsApi} from '~/store/AccountsApiSlice.ts';
+import {beneficiariesApi} from '~/store/BeneficiariesApiSlice.ts';
 
 export const store = configureStore({
   reducer: {
@@ -10,10 +11,12 @@ export const store = configureStore({
     [authApi.reducerPath]: authApi.reducer,
     [usersApi.reducerPath]: usersApi.reducer,
     [accountsApi.reducerPath]: accountsApi.reducer,
+    [beneficiariesApi.reducerPath]: beneficiariesApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
-      authApi.middleware, usersApi.middleware, accountsApi.middleware
+      authApi.middleware, usersApi.middleware, accountsApi.middleware,
+      beneficiariesApi.middleware
     ),
 });
 

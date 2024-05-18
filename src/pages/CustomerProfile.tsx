@@ -12,7 +12,7 @@ import {storeSessionData} from '~/components/AuthForm/helpers.ts';
 
 
 const CustomerProfile = () => {
-  const { auth, user, setAuth } = useOutletContext<TOutletContext>();
+  const { user, setAuth } = useOutletContext<TOutletContext>();
 
   const [ownerIdentifier, setOwnerIdentifier] = useState<string>('');
   const [showOtpSubmitModal, setShowOtpSubmitModal] = useState(false);
@@ -20,7 +20,6 @@ const CustomerProfile = () => {
   const [activateProfile, { isLoading }] = useActivateProfileMutation();
   const [submitProfileUpdateOtp, { isLoading: isSubmitProfileUpdateOtpOngoing}] = useSubmitProfileUpdateOtpMutation();
 
-  console.log({ auth, user });
   const handleUpdateProfile = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;

@@ -71,7 +71,6 @@ const AuthForm = ({registration = false}) => {
   const processLogin = async ({ username, password }: TLoginCredentials) => {
     try {
       const result: TOtpSubmitResponseData = await login({ username, password }).unwrap();
-      console.log('Login successful: ', result);
       const claims = storeSessionData(result);
       navigate(ROUTE_BUILDER[claims.scope[0]].PROFILE);
     } catch (error) {
