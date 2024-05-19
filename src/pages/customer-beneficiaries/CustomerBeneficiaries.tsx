@@ -16,10 +16,16 @@ import {
 } from '~/pages/customer-beneficiaries/types.ts';
 import BeneficiaryActionModal from '~/pages/customer-beneficiaries/BeneficiaryActionModal.tsx';
 import Col from 'react-bootstrap/Col';
+import {useFetchAccountsQuery} from '~/store/AccountsApiSlice.ts';
+import {TAccount} from '~/pages/customer-accounts/types.ts';
+import MoneyTransferModal from '~/pages/customer-beneficiaries/MoneyTransferModal.tsx';
 
 const CustomerBeneficiaries = () => {
   const { user } = useOutletContext<TOutletContext>();
   const { data, isLoading, error, refetch} = useFetchCustomerBeneficiariesQuery(user.id);
+  const {
+    data: accountData, isLoading: isLoadingAccounts, error: accountsError, refetch: refetchAccounts
+  } = useFetchAccountsQuery(user.id);
 
   const [selectedBeneficiary, setSelectedBeneficiary] = useState<TBeneficiary | null>(null);
   const [modalType, setModalType] = useState<TModalType | null>(null);
@@ -38,12 +44,13 @@ const CustomerBeneficiaries = () => {
 
   if (isLoading) return <LoadingOverlay show={isLoading} />;
 
-  if (error) {
+  if (error || accountsError) {
     console.error('Error when fetching user data: ', error);
     return <ErrorOccurred/>;
   }
 
   const beneficiaries = data ? (data as TFetchBeneficiariesResponse).data.beneficiaries : [];
+  const accounts: TAccount[] = accountData ? accountData.data.accounts : [];
 
   return (
     <Container>
@@ -79,6 +86,14 @@ const CustomerBeneficiaries = () => {
                   variant="danger"
                   onClick={() => handleBeneficiaryAction(beneficiary, 'Delete')}
                 >Delete</Button>
+                {beneficiary.status === 'APPROVED' && (
+                  <Button
+                    className="mx-2"
+                    variant="warning"
+                    disabled={isLoadingAccounts || accounts.length === 0}
+                    onClick={() => handleBeneficiaryAction(beneficiary, 'Transfer')}
+                  >Transfer Money</Button>
+                )}
               </td>
             </tr>
           ))}
@@ -119,6 +134,14 @@ const CustomerBeneficiaries = () => {
           onClose={handleBeneficiaryActionModalClose}
           onSubmit={refetch}
           modalType="Create"
+        />
+      )}
+      {selectedBeneficiary && modalType === 'Transfer' && (
+        <MoneyTransferModal
+          beneficiary={selectedBeneficiary}
+          accounts={accounts}
+          onClose={handleBeneficiaryActionModalClose}
+          onSubmit={refetchAccounts}
         />
       )}
     </Container>

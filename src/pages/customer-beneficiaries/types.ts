@@ -22,4 +22,19 @@ export type TFetchBeneficiariesResponse = {
   }
 };
 
-export type TModalType = 'Update' | 'Delete' | 'Create';
+export type TModalType = 'Update' | 'Delete' | 'Create' | 'Transfer';
+
+export type TTransactionMethod = 'NEFT' | 'UPI' | 'RTGS';
+
+export type TTransferMoneyFetchArgs = {
+  pathParams: {
+    customerId: number;
+    accountId: number;
+  },
+  payload: {
+    amount: number;
+    beneficiaryId: number;
+    transactionMethod: TTransactionMethod;
+    description: string;
+  }
+};

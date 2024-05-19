@@ -1,6 +1,7 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 
 import {addAuthHeader, buildBaseUrl} from '~/store/helpers.ts';
+import {TTransferMoneyFetchArgs} from '~/pages/customer-beneficiaries/types.ts';
 
 export type TFetchAccountsRequestParams = {
   pathParams: {
@@ -31,17 +32,18 @@ export const accountsApi = createApi({
         params: queryParams,
       }),
     }),
-    // submitProfileUpdateOtp: builder.mutation({
-    //   query: (payload: TOtpSubmitRequestPayload) => ({
-    //     url: 'profile/otp',
-    //     method: 'POST',
-    //     body: payload,
-    //   }),
-    // }),
+    transferMoney: builder.mutation({
+      query: ({ pathParams, payload }: TTransferMoneyFetchArgs) => ({
+        url: `/${pathParams.customerId}/accounts/${pathParams.accountId}/transactions`,
+        method: 'POST',
+        body: payload,
+      }),
+    }),
   })
 });
 
 export const {
   useFetchAccountsQuery,
-  useFetchAccountTransactionsQuery
+  useFetchAccountTransactionsQuery,
+  useTransferMoneyMutation
 } = accountsApi;
