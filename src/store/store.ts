@@ -6,6 +6,7 @@ import {accountsApi} from '~/store/AccountsApiSlice.ts';
 import {beneficiariesApi} from '~/store/BeneficiariesApiSlice.ts';
 import {managerBeneficiariesApi} from '~/store/ManagerBeneficiariesApiSlice.ts';
 import {customerLoansApi} from '~/store/CustomerLoansApiSlice.ts';
+import {managerLoansApi} from '~/store/ManagerLoansApiSlice.ts';
 
 export const store = configureStore({
   reducer: {
@@ -16,12 +17,13 @@ export const store = configureStore({
     [beneficiariesApi.reducerPath]: beneficiariesApi.reducer,
     [managerBeneficiariesApi.reducerPath]: managerBeneficiariesApi.reducer,
     [customerLoansApi.reducerPath]: customerLoansApi.reducer,
+    [managerLoansApi.reducerPath]: managerLoansApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       authApi.middleware, usersApi.middleware, accountsApi.middleware,
       beneficiariesApi.middleware, managerBeneficiariesApi.middleware,
-      customerLoansApi.middleware,
+      customerLoansApi.middleware, managerLoansApi.middleware,
     ),
 });
 

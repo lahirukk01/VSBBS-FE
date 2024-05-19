@@ -6,7 +6,7 @@ import ErrorOccurred from '~/pages/ErrorOccurred.tsx';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Table from 'react-bootstrap/Table';
-import {TCustomerLoansFetchResponse} from '~/pages/customer-loans/types.ts';
+import {TLoansFetchResponse} from '~/pages/customer-loans/types.ts';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import {useState} from 'react';
@@ -26,7 +26,7 @@ const CustomerLoans = () => {
     return <ErrorOccurred />;
   }
 
-  const loans = data ? (data as TCustomerLoansFetchResponse).data.loans : [];
+  const loans = data ? (data as TLoansFetchResponse).data.loans : [];
   console.log('data: ', data);
   return (
     <Container>

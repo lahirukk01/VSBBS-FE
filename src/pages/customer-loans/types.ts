@@ -1,4 +1,5 @@
-export type TLoanStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+export type TLoanDecision = 'APPROVED' | 'REJECTED';
+export type TLoanStatus = 'PENDING' & TLoanDecision;
 export type TLoanPaymentStatus = 'PENDING' | 'NA' | 'PAID' | 'OVERDUE';
 
 export type TLoanBase = {
@@ -13,11 +14,13 @@ export type TLoan = {
   status: TLoanStatus;
   paymentStatus: TLoanPaymentStatus;
   paidEmis: number;
+  creditRating: number | null;
+  remarks: string | null;
   createdAt: string;
   updatedAt: string;
 } & TLoanBase;
 
-export type TCustomerLoansFetchResponse = {
+export type TLoansFetchResponse = {
   data: {
     loans: TLoan[];
   }

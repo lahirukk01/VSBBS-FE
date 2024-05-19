@@ -14,6 +14,7 @@ import CustomerBeneficiaries from '~/pages/customer-beneficiaries/CustomerBenefi
 import ManagerProfile from '~/pages/ManagerProfile.tsx';
 import ManagerBeneficiaries from '~/pages/manager-beneficiaries/ManagerBeneficiaries.tsx';
 import CustomerLoans from '~/pages/customer-loans/CustomerLoans.tsx';
+import ManagerLoans from '~/pages/manager-loans/ManagerLoans.tsx';
 
 const App = () => {
 
@@ -31,6 +32,7 @@ const App = () => {
           <Route path="/manager" element={<Layout scope={SCOPE.MANAGER} />}>
             <Route path="profile" element={<ManagerProfile />} />
             <Route path="beneficiaries" element={<ManagerBeneficiaries />} />
+            <Route path="loans" element={<ManagerLoans />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
