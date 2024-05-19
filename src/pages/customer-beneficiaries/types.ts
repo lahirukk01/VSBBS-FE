@@ -5,23 +5,21 @@ export type TBeneficiaryBase = {
   accountIfscCode: string;
 };
 
+export type TBeneficiaryStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+
 export type TBeneficiary = {
   id: number;
   customerId: number;
-  status: 'PENDING' | 'APPROVED' | 'REJECTED';
-  comments: string;
+  status: TBeneficiaryStatus;
+  comments: string | null;
   createdAt: string;
   updatedAt: string;
 } & TBeneficiaryBase;
 
-export type TFetchCustomerBeneficiariesResponse = {
+export type TFetchBeneficiariesResponse = {
   data: {
     beneficiaries: TBeneficiary[]
   }
-};
-
-export type TCreateBeneficiaryRequest = {
-
 };
 
 export type TModalType = 'Update' | 'Delete' | 'Create';

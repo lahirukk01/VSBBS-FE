@@ -11,7 +11,7 @@ import LoadingOverlay from '~/components/layout/LoadingOverlay.tsx';
 import ErrorOccurred from '~/pages/ErrorOccurred.tsx';
 import {
   TBeneficiary,
-  TFetchCustomerBeneficiariesResponse,
+  TFetchBeneficiariesResponse,
   TModalType
 } from '~/pages/customer-beneficiaries/types.ts';
 import BeneficiaryActionModal from '~/pages/customer-beneficiaries/BeneficiaryActionModal.tsx';
@@ -43,7 +43,7 @@ const CustomerBeneficiaries = () => {
     return <ErrorOccurred/>;
   }
 
-  const beneficiaries = data ? (data as TFetchCustomerBeneficiariesResponse).data.beneficiaries : [];
+  const beneficiaries = data ? (data as TFetchBeneficiariesResponse).data.beneficiaries : [];
 
   return (
     <Container>
@@ -54,8 +54,8 @@ const CustomerBeneficiaries = () => {
             <tr>
               <th>Name</th>
               <th>Email ID</th>
-              <th>Account ID</th>
-              <th>Account IFSC Code</th>
+              <th>Acc. ID</th>
+              <th>Acc. IFSC Code</th>
               <th>Status</th>
               <th>Manager Comments</th>
               <th>Actions</th>

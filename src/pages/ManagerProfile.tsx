@@ -27,7 +27,7 @@ const ManagerProfile = () => {
         </Form.Group>
 
         <Form.Group controlId="formCustomerId" className="mb-3">
-          <Form.Label>Customer ID</Form.Label>
+          <Form.Label>User ID</Form.Label>
           <Form.Control
             type="number"
             min={1}
