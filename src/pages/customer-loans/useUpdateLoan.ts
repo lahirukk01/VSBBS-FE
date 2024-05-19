@@ -1,4 +1,4 @@
-import {useCreateCustomerLoanMutation} from '~/store/CustomerLoansApiSlice.ts';
+import {useUpdateCustomerLoanMutation} from '~/store/CustomerLoansApiSlice.ts';
 import {useEffect, useState} from 'react';
 import {TErrorResponse} from '~/types/common.ts';
 
@@ -7,13 +7,13 @@ type TUseCreateCustomerArgs = {
   onClose: () => void;
 };
 
-const useCreateCustomer = ({ onSubmit, onClose }: TUseCreateCustomerArgs) => {
+const useUpdateLoan = ({ onSubmit, onClose }: TUseCreateCustomerArgs) => {
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const [
-    createCustomerLoan,
+    updateCustomerLoan,
     { isSuccess, error, isLoading},
-  ] = useCreateCustomerLoanMutation();
+  ] = useUpdateCustomerLoanMutation();
 
   useEffect(() => {
     if (isSuccess) {
@@ -27,9 +27,9 @@ const useCreateCustomer = ({ onSubmit, onClose }: TUseCreateCustomerArgs) => {
 
   return {
     isLoading,
-    createCustomerLoan,
+    updateCustomerLoan,
     errorMessage
   };
 };
 
-export default useCreateCustomer;
+export default useUpdateLoan;

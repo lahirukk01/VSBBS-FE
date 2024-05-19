@@ -3,35 +3,49 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import {useState} from 'react';
 import Row from 'react-bootstrap/Row';
-import useCreateCustomer from '~/pages/customer-loans/useCreateCustomer.ts';
+import useCreateLoan from '~/pages/customer-loans/useCreateLoan.ts';
+import {TLoan} from '~/pages/customer-loans/types.ts';
+import useUpdateLoan from '~/pages/customer-loans/useUpdateLoan.ts';
 
 type TCreateLoanModalProps = {
   onClose: () => void;
   onSubmit: () => void;
   customerId: number;
+  loan: TLoan | null;
 };
 
-const CreateLoanModal: React.FC<TCreateLoanModalProps> = ({ onClose, onSubmit, customerId }) => {
-  const [loanAmount, setLoanAmount] = useState<number>(0);
-  const [numberOfEmis, setNumberOfEmis] = useState<number>(1);
-  const [purpose, setPurpose] = useState<string>('');
+const LoanModal: React.FC<TCreateLoanModalProps> = ({ onClose, onSubmit, customerId, loan }) => {
+  const [loanAmount, setLoanAmount] = useState<number>(loan?.amount || 0);
+  const [numberOfEmis, setNumberOfEmis] = useState<number>(loan?.numberOfEmis || 1);
+  const [purpose, setPurpose] = useState<string>(loan?.purpose || '');
 
-  const { createCustomerLoan, errorMessage, isLoading } = useCreateCustomer({
-    onSubmit,
-    onClose
-  });
+  const {
+    createCustomerLoan, errorMessage, isLoading
+  } = useCreateLoan({ onSubmit, onClose });
+  const {
+    updateCustomerLoan,
+    isLoading: isUpdateLoading,
+    errorMessage: updateErrorMessage,
+  } = useUpdateLoan({ onSubmit, onClose });
 
   const handleSubmit = async () => {
-    await createCustomerLoan({
+    const fetchArgs = {
       pathParams: {
         customerId,
+        loanId: loan ? loan.id : 0
       },
       payload: {
         amount: loanAmount,
         numberOfEmis,
         purpose
       }
-    }).unwrap();
+    };
+
+    if (loan) {
+      await updateCustomerLoan(fetchArgs).unwrap();
+    } else {
+      await createCustomerLoan(fetchArgs).unwrap();
+    }
   };
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,12 +53,24 @@ const CreateLoanModal: React.FC<TCreateLoanModalProps> = ({ onClose, onSubmit, c
     setLoanAmount(value);
   };
 
-  const disableSubmit = loanAmount < 1 || numberOfEmis < 1 || !purpose || isLoading;
+  const loanReviewed = loan?.status === 'APPROVED' || loan?.status === 'REJECTED';
+  const disableSubmit = loanAmount < 1 || numberOfEmis < 1 || !purpose ||
+    isLoading || loanReviewed || isUpdateLoading;
+  const finalErrorMessage = errorMessage || updateErrorMessage;
+
+  let title = 'Create Loan';
+  if (loan) {
+    if (loanReviewed) {
+      title = 'Loan Details';
+    } else {
+      title = 'Update Loan';
+    }
+  }
 
   return (
     <Modal show={true} onHide={onClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Create Loan</Modal.Title>
+        <Modal.Title>{title}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Row>
@@ -57,6 +83,7 @@ const CreateLoanModal: React.FC<TCreateLoanModalProps> = ({ onClose, onSubmit, c
                 min={10}
                 value={loanAmount || ''}
                 onChange={handleAmountChange}
+                readOnly={loanReviewed}
               />
             </Form.Group>
             <Form.Group controlId="formBasicPassword">
@@ -68,6 +95,7 @@ const CreateLoanModal: React.FC<TCreateLoanModalProps> = ({ onClose, onSubmit, c
                 value={numberOfEmis}
                 min={1}
                 max={120}
+                readOnly={loanReviewed}
                 onChange={(e) => setNumberOfEmis(+e.target.value)}
               />
             </Form.Group>
@@ -76,25 +104,26 @@ const CreateLoanModal: React.FC<TCreateLoanModalProps> = ({ onClose, onSubmit, c
               <Form.Control
                 type="test"
                 value={purpose}
+                readOnly={loanReviewed}
                 onChange={(e) => setPurpose(e.target.value)}
               />
             </Form.Group>
           </Form>
         </Row>
         <Row>
-          <p className="text-danger">{errorMessage}</p>
+          <p className="text-danger">{finalErrorMessage}</p>
         </Row>
       </Modal.Body>
       <Modal.Footer className="justify-content-center">
-        <Button
+        {!loanReviewed && <Button
           disabled={disableSubmit}
           variant="primary"
           onClick={handleSubmit}>
           Submit
-        </Button>
+        </Button>}
       </Modal.Footer>
     </Modal>
   );
 };
 
-export default CreateLoanModal;
+export default LoanModal;

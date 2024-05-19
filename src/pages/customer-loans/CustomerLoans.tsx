@@ -6,16 +6,17 @@ import ErrorOccurred from '~/pages/ErrorOccurred.tsx';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Table from 'react-bootstrap/Table';
-import {TLoansFetchResponse} from '~/pages/customer-loans/types.ts';
+import {TLoan, TLoansFetchResponse} from '~/pages/customer-loans/types.ts';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import {useState} from 'react';
-import CreateLoanModal from '~/pages/customer-loans/CreateLoanModal.tsx';
+import LoanModal from '~/pages/customer-loans/LoanModal.tsx';
 
 const CustomerLoans = () => {
   const { user } = useOutletContext<TOutletContext>();
 
   const [showCreateLoanModal, setShowCreateLoanModal] = useState<boolean>(false);
+  const [selectedLoan, setSelectedLoan] = useState<TLoan | null>(null);
 
   const { data, isLoading, error, refetch } = useFetchCustomerLoansQuery(user.id);
 
@@ -27,7 +28,7 @@ const CustomerLoans = () => {
   }
 
   const loans = data ? (data as TLoansFetchResponse).data.loans : [];
-  console.log('data: ', data);
+
   return (
     <Container>
       <Row>
@@ -40,6 +41,7 @@ const CustomerLoans = () => {
               <th>Number of EMIs</th>
               <th>Status</th>
               <th>Payment Status</th>
+              <td>Action</td>
             </tr>
           </thead>
           <tbody>
@@ -50,6 +52,11 @@ const CustomerLoans = () => {
                 <td>{loan.numberOfEmis}</td>
                 <td>{loan.status}</td>
                 <td>{loan.paymentStatus}</td>
+                <td>
+                  <Button onClick={() => setSelectedLoan(loan)}>
+                    {loan.status === 'PENDING' ? 'Review' : 'View'}
+                  </Button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -64,10 +71,19 @@ const CustomerLoans = () => {
         </Col>
       </Row>
       {showCreateLoanModal && (
-        <CreateLoanModal
+        <LoanModal
           onClose={() => setShowCreateLoanModal(false)}
           onSubmit={refetch}
           customerId={user.id}
+          loan={null}
+        />
+      )}
+      {selectedLoan && (
+        <LoanModal
+          onClose={() => setSelectedLoan(null)}
+          onSubmit={refetch}
+          customerId={user.id}
+          loan={selectedLoan}
         />
       )}
     </Container>

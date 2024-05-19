@@ -32,3 +32,9 @@ export type TCreateCustomerLoanFetchArgs = {
   };
   payload: TLoanBase;
 };
+
+export type TUpdateCustomerLoanFetchArgs = {
+  pathParams: {
+    loanId: number;
+  };
+} & TCreateCustomerLoanFetchArgs;
