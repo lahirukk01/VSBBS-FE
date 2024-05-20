@@ -1,6 +1,10 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import {addAuthHeader, buildBaseUrl} from '~/store/helpers.ts';
-import {TCreateCustomerLoanFetchArgs, TUpdateCustomerLoanFetchArgs} from '~/pages/customer-loans/types.ts';
+import {
+  TCreateCustomerLoanFetchArgs, TCreateCustomerLoanPaymentFetchArgs,
+  TDeleteCustomerLoanFetchArgs,
+  TUpdateCustomerLoanFetchArgs
+} from '~/pages/customer-loans/types.ts';
 
 export const customerLoansApi = createApi({
   reducerPath: 'customerLoansApi',
@@ -19,11 +23,24 @@ export const customerLoansApi = createApi({
         body: payload,
       }),
     }),
+    createCustomerLoanPayment: builder.mutation({
+      query: ({ pathParams, payload }: TCreateCustomerLoanPaymentFetchArgs) => ({
+        url: `/${pathParams.customerId}/loans/${pathParams.loanId}/payments`,
+        method: 'POST',
+        body: payload,
+      }),
+    }),
     updateCustomerLoan: builder.mutation({
       query: ({ pathParams, payload }: TUpdateCustomerLoanFetchArgs) => ({
         url: `/${pathParams.customerId}/loans/${pathParams.loanId}`,
         method: 'PUT',
         body: payload,
+      }),
+    }),
+    deleteCustomerLoan: builder.mutation({
+      query: ({ pathParams }: TDeleteCustomerLoanFetchArgs) => ({
+        url: `/${pathParams.customerId}/loans/${pathParams.loanId}`,
+        method: 'DELETE',
       }),
     }),
   }),
@@ -33,4 +50,6 @@ export const {
   useFetchCustomerLoansQuery,
   useCreateCustomerLoanMutation,
   useUpdateCustomerLoanMutation,
+  useDeleteCustomerLoanMutation,
+  useCreateCustomerLoanPaymentMutation,
 } = customerLoansApi;

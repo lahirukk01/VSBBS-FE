@@ -1,11 +1,14 @@
+import {useState} from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import {useState} from 'react';
 import Row from 'react-bootstrap/Row';
+
 import useCreateLoan from '~/pages/customer-loans/useCreateLoan.ts';
 import {TLoan} from '~/pages/customer-loans/types.ts';
 import useUpdateLoan from '~/pages/customer-loans/useUpdateLoan.ts';
+import Col from 'react-bootstrap/Col';
+import useDeleteLoan from '~/pages/customer-loans/useDeleteLoan.ts';
 
 type TCreateLoanModalProps = {
   onClose: () => void;
@@ -28,16 +31,19 @@ const LoanModal: React.FC<TCreateLoanModalProps> = ({ onClose, onSubmit, custome
     errorMessage: updateErrorMessage,
   } = useUpdateLoan({ onSubmit, onClose });
 
+  const {
+    deleteCustomerLoan,
+    deleteErrorMessage,
+    isLoadingDelete,
+  } = useDeleteLoan({ onSubmit, onClose });
+
   const handleSubmit = async () => {
     const fetchArgs = {
       pathParams: {
-        customerId,
-        loanId: loan ? loan.id : 0
+        customerId, loanId: loan ? loan.id : 0
       },
       payload: {
-        amount: loanAmount,
-        numberOfEmis,
-        purpose
+        amount: loanAmount, numberOfEmis, purpose
       }
     };
 
@@ -53,17 +59,25 @@ const LoanModal: React.FC<TCreateLoanModalProps> = ({ onClose, onSubmit, custome
     setLoanAmount(value);
   };
 
+  const handleLoanDelete = async () => {
+    if (window.confirm('Are you sure you want to delete this loan?')) {
+      await deleteCustomerLoan({
+        pathParams: { customerId, loanId: loan?.id || 0 }
+      }).unwrap();
+    }
+  };
+
   const loanReviewed = loan?.status === 'APPROVED' || loan?.status === 'REJECTED';
   const disableSubmit = loanAmount < 1 || numberOfEmis < 1 || !purpose ||
     isLoading || loanReviewed || isUpdateLoading;
-  const finalErrorMessage = errorMessage || updateErrorMessage;
+  const finalErrorMessage = errorMessage || updateErrorMessage || deleteErrorMessage;
 
   let title = 'Create Loan';
   if (loan) {
     if (loanReviewed) {
       title = 'Loan Details';
     } else {
-      title = 'Update Loan';
+      title = 'Update or Delete Loan';
     }
   }
 
@@ -73,6 +87,9 @@ const LoanModal: React.FC<TCreateLoanModalProps> = ({ onClose, onSubmit, custome
         <Modal.Title>{title}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
+        <Row>
+          <p>Interest Rate: 4%</p>
+        </Row>
         <Row>
           <Form>
             <Form.Group controlId="formBasicEmail">
@@ -86,7 +103,7 @@ const LoanModal: React.FC<TCreateLoanModalProps> = ({ onClose, onSubmit, custome
                 readOnly={loanReviewed}
               />
             </Form.Group>
-            <Form.Group controlId="formBasicPassword">
+            <Form.Group controlId="formEmis">
               <Form.Label>Number of EMIs</Form.Label>
               <Form.Control
                 type="number"
@@ -99,8 +116,8 @@ const LoanModal: React.FC<TCreateLoanModalProps> = ({ onClose, onSubmit, custome
                 onChange={(e) => setNumberOfEmis(+e.target.value)}
               />
             </Form.Group>
-            <Form.Group controlId="formBasicPassword">
-              <Form.Label>Purpose of Payments</Form.Label>
+            <Form.Group controlId="formPPurpose">
+              <Form.Label>Purpose of Loan</Form.Label>
               <Form.Control
                 type="test"
                 value={purpose}
@@ -108,6 +125,17 @@ const LoanModal: React.FC<TCreateLoanModalProps> = ({ onClose, onSubmit, custome
                 onChange={(e) => setPurpose(e.target.value)}
               />
             </Form.Group>
+            {loanReviewed && (
+              <Form.Group controlId="formPPurpose">
+                <Form.Label>Loan Status</Form.Label>
+                <Form.Control
+                  type="test"
+                  value={loan?.status}
+                  readOnly={loanReviewed}
+                  onChange={(e) => setPurpose(e.target.value)}
+                />
+              </Form.Group>
+            )}
           </Form>
         </Row>
         <Row>
@@ -115,12 +143,25 @@ const LoanModal: React.FC<TCreateLoanModalProps> = ({ onClose, onSubmit, custome
         </Row>
       </Modal.Body>
       <Modal.Footer className="justify-content-center">
-        {!loanReviewed && <Button
-          disabled={disableSubmit}
-          variant="primary"
-          onClick={handleSubmit}>
-          Submit
-        </Button>}
+        {!loanReviewed && (
+          <Row className="w-100">
+            <Col>
+              <Button
+              disabled={disableSubmit}
+              variant="primary"
+              onClick={handleSubmit}>
+                {loan ? 'Update' : 'Create'}
+            </Button>
+            </Col>
+            <Col>
+              {loan?.status === 'PENDING' &&
+                <Button
+                  disabled={isLoadingDelete}
+                  onClick={handleLoanDelete}
+                  className="mx-2" variant="danger">Cancel Loan</Button>}
+            </Col>
+          </Row>
+        )}
       </Modal.Footer>
     </Modal>
   );

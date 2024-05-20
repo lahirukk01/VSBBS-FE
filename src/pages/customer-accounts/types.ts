@@ -1,7 +1,9 @@
+export type TAccountType = 'SAVINGS' | 'CURRENT' | 'FIXED_DEPOSIT' | 'TERM_DEPOSIT';
+
 export type TAccount = {
   id: number;
   customerId: number;
-  accountType: string;
+  accountType: TAccountType;
   balance: number;
   createdAt: string;
   updatedAt: string;
