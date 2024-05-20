@@ -11,7 +11,7 @@ import {
   TLoan,
   TPaymentMethod
 } from '~/pages/customer-loans/types.ts';
-import CardPayment from '~/pages/customer-loans/CardPayment.tsx';
+import {CardPayment, UpiPayment} from '~/pages/customer-loans/PaymentComponents.tsx';
 import {buildLoanPaymentSubmitFetchArgs, cardDetailsValidationErrors} from '~/pages/customer-loans/helpers.ts';
 import LoanPaymentSummary from '~/pages/customer-loans/LoanPaymentSummary.tsx';
 import {TAccount} from '~/pages/customer-accounts/types.ts';
@@ -22,7 +22,7 @@ type TLoanPaymentModalProps = {
   loan: TLoan;
   savingsAccount: TAccount;
   onClose: () => void;
-  onSubmit: () => void;
+  onSubmit: (paymentMethod: TPaymentMethod) => void;
 };
 
 const initCardDetails: TCardDetails = {
@@ -41,7 +41,9 @@ const LoanPaymentModal = ({ loan, onClose, onSubmit, savingsAccount }: TLoanPaym
     createCustomerLoanPayment,
     errorMessage: createLoanPaymentErrorMessage,
     isLoading: isCreatingLoanPayment
-  } = useCreateLoanPayment({onSubmit, onClose});
+  } = useCreateLoanPayment({
+    onSubmit, onClose, paymentMethod: paymentMethod as TPaymentMethod
+  });
 
   const handlePaymentMethodChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value as (TPaymentMethod | '');
@@ -77,16 +79,7 @@ const LoanPaymentModal = ({ loan, onClose, onSubmit, savingsAccount }: TLoanPaym
     PaymentMethodComponent = <CardPayment cardDetails={cardDetails} onChange={handleCardDetailsChange} />;
   } else if (paymentMethod === 'UPI') {
     PaymentMethodComponent = (
-      <InputGroup className="mb-3">
-        <InputGroup.Text>UPI PIN</InputGroup.Text>
-        <Form.Control
-          type="text"
-          maxLength={6}
-          placeholder="Enter UPI ID"
-          value={upiPin}
-          onChange={(e) => setUpiPin(e.target.value)}
-        />
-      </InputGroup>
+      <UpiPayment upiPin={upiPin} onUpiPinChange={(pin) => setUpiPin(pin)} />
     );
   }
 
@@ -113,6 +106,9 @@ const LoanPaymentModal = ({ loan, onClose, onSubmit, savingsAccount }: TLoanPaym
               </Form.Select>
             </InputGroup>
             {PaymentMethodComponent}
+            {paymentMethod === 'SAVINGS_ACCOUNT' && (
+              <p className="mx-3">Balance: {savingsAccount.balance.toFixed(2)}</p>
+            )}
           </Col>
         </Row>
         <Row>

@@ -10,7 +10,7 @@ import {TOutletContext} from '~/types/common.ts';
 import {useFetchCustomerLoansQuery} from '~/store/CustomerLoansApiSlice.ts';
 import LoadingOverlay from '~/components/layout/LoadingOverlay.tsx';
 import ErrorOccurred from '~/pages/ErrorOccurred.tsx';
-import {TLoan, TLoansFetchResponse} from '~/pages/customer-loans/types.ts';
+import {TLoan, TLoansFetchResponse, TPaymentMethod} from '~/pages/customer-loans/types.ts';
 import LoanModal from '~/pages/customer-loans/LoanModal.tsx';
 import LoanPaymentModal from '~/pages/customer-loans/LoanPaymentModal.tsx';
 import {useFetchAccountsQuery} from '~/store/AccountsApiSlice.ts';
@@ -26,7 +26,7 @@ const CustomerLoans = () => {
 
   const { data, isLoading, error, refetch } = useFetchCustomerLoansQuery(user.id);
   const {
-    data: accountData, isLoading: isLoadingAccounts, error: accountsError
+    data: accountData, isLoading: isLoadingAccounts, error: accountsError, refetch: refetchAccounts
   } = useFetchAccountsQuery(user.id);
 
   const handleCloseLoanModal = () => {
@@ -37,6 +37,14 @@ const CustomerLoans = () => {
   const handleLoanAction = (loan: TLoan | null, action: TLoanModalType) => {
     setSelectedLoan(loan);
     setModalType(action);
+  };
+
+  const handleLoanPaymentSubmit = (paymentMethod: TPaymentMethod) => {
+    refetch();
+
+    if (paymentMethod === 'SAVINGS_ACCOUNT') {
+      refetchAccounts();
+    }
   };
 
   const getPaymentStatusString = (loan: TLoan) => {
@@ -122,7 +130,7 @@ const CustomerLoans = () => {
         <LoanPaymentModal
           loan={selectedLoan}
           onClose={handleCloseLoanModal}
-          onSubmit={refetch}
+          onSubmit={handleLoanPaymentSubmit}
           savingsAccount={savingsAccount}
         />
       )}

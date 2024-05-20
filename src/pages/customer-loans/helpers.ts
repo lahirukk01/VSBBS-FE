@@ -55,7 +55,10 @@ export const buildLoanPaymentSubmitFetchArgs = ({
   } else if (paymentMethod === 'CREDIT_CARD' || paymentMethod === 'DEBIT_CARD') {
     createPaymentFetchArgs.payload = {
       ...createPaymentFetchArgs.payload,
-      ...cardDetails
+      cardHolderName: cardDetails.cardHolderName,
+      cardNumber: cardDetails.cardNumber,
+      cardExpiry: cardDetails.expiryDate,
+      cardCvv: cardDetails.cvv,
     };
   }
 

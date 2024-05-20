@@ -8,13 +8,13 @@ type TPaymentMethodComponentProps = {
   onChange: (fieldName: TCardField, value: string) => void;
 };
 
-const CardPayment = ({ cardDetails, onChange }: TPaymentMethodComponentProps ) => {
+export const CardPayment = ({ cardDetails, onChange }: TPaymentMethodComponentProps ) => {
 
   return (
     <Row>
       <Col>
         <InputGroup className="mb-3">
-          <InputGroup.Text>Card Number</InputGroup.Text>
+          <InputGroup.Text>Card Holder</InputGroup.Text>
           <Form.Control
             type="text"
             maxLength={50}
@@ -60,4 +60,23 @@ const CardPayment = ({ cardDetails, onChange }: TPaymentMethodComponentProps ) =
   );
 };
 
-export default CardPayment;
+type TUpiPaymentProps = {
+  upiPin: string;
+  onUpiPinChange: (upiPin: string) => void;
+};
+
+
+export const UpiPayment = ({ upiPin, onUpiPinChange }: TUpiPaymentProps) => {
+  return (
+    <InputGroup className="mb-3">
+      <InputGroup.Text>UPI PIN</InputGroup.Text>
+      <Form.Control
+        type="text"
+        maxLength={6}
+        placeholder="Enter UPI ID"
+        value={upiPin}
+        onChange={(e) => onUpiPinChange(e.target.value)}
+      />
+    </InputGroup>
+  );
+};
