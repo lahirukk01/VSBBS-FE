@@ -36,7 +36,7 @@ const Component: React.FC<AuthComponentProps> = ({ auth, logout, setAuth }) => {
 
   return (
     <Container fluid className="vh-100 d-flex flex-column mx-0">
-      <Row className="bg-dark-subtle">
+      <Row className="bg-warning-subtle">
         <Col>
           <h4 className="text-center py-2">
             Welcome {`${user.firstName} ${user.lastName}`}
@@ -45,7 +45,7 @@ const Component: React.FC<AuthComponentProps> = ({ auth, logout, setAuth }) => {
       </Row>
       <Row className="flex-grow-1">
         <Col xs={2} className="bg-dark">
-          <h3 className="text-white">Menu</h3>
+          <h3 className="text-white mt-3">Menu</h3>
           <Stack gap={3}>
             <div
               className={cn('p-2 text-white',
