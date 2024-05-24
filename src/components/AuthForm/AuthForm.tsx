@@ -43,10 +43,8 @@ const AuthForm = ({registration = false}) => {
   const handleOtpSubmit = async (otp: string) => {
     try {
       const otpSubmitResponse = await submitRegistrationOtp({ otp, ownerIdentifier }).unwrap();
-      const otpSubmitResponseData = otpSubmitResponse.data as TOtpSubmitResponseData;
+      const otpSubmitResponseData = otpSubmitResponse as TOtpSubmitResponseData;
       const claims: TJwtPayload = storeSessionData(otpSubmitResponseData);
-      // setShowRegistrationSuccess(true);
-      // console.log('OTP submit response: ', decodedToken);
       navigate(ROUTE_BUILDER[claims.scope[0]].PROFILE);
     } catch (error) {
       console.error('Failed to submit OTP: ', error);
