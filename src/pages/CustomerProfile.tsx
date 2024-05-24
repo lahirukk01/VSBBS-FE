@@ -57,7 +57,7 @@ const CustomerProfile = () => {
   return (
     <Row>
       {user.id === 0 && <h4 className="my-3 text-center">Please update the profile details to activate account</h4>}
-      <Col className="mx-3">
+      <Col className="mx-3 mt-3">
         <Form onSubmit={handleUpdateProfile}>
           <Form.Group controlId="formUsername" className="mb-3">
             <Form.Label>Username</Form.Label>
