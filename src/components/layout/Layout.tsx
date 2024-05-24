@@ -36,15 +36,15 @@ const Component: React.FC<AuthComponentProps> = ({ auth, logout, setAuth }) => {
 
   return (
     <Container fluid className="vh-100 d-flex flex-column mx-0">
-      <Row className="bg-warning-subtle">
+      <Row className="bg-dark">
         <Col>
-          <h4 className="text-center py-2">
+          <h4 className="text-center py-2 text-white">
             Welcome {`${user.firstName} ${user.lastName}`}
           </h4>
         </Col>
       </Row>
       <Row className="flex-grow-1">
-        <Col xs={2} className="bg-dark">
+        <Col xs={2} style={{ backgroundColor: '#000044' }}>
           <h3 className="text-white mt-3">Menu</h3>
           <Stack gap={3}>
             <div
