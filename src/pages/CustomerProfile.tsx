@@ -31,7 +31,6 @@ const CustomerProfile = () => {
 
     try {
       const result: TOtpGenerateResponse = await activateProfile(updatedUser).unwrap();
-      console.log('Profile update initiated: ', result);
       setOwnerIdentifier(result.data.ownerIdentifier);
       setShowOtpSubmitModal(true);
     } catch (error) {
@@ -40,12 +39,10 @@ const CustomerProfile = () => {
   };
 
   const handleOtpSubmit = async (otp: string) => {
-    console.log('OTP submitted: ', otp);
     try {
       const response: TOtpSubmitResponseData = await submitProfileUpdateOtp({ otp, ownerIdentifier }).unwrap();
       const jwtData = storeSessionData(response);
       setAuth(jwtData);
-      console.log('JWT data: ', jwtData);
     } catch (error) {
       console.error('Failed to submit OTP: ', error);
     } finally {
