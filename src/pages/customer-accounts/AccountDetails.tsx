@@ -18,7 +18,7 @@ const AccountDetails = ({ account, customerId }: TAccountDetailsProps) => {
   const [fromDate, setFromDate] = useState<string>('');
   const [toDate, setToDate] = useState<string>('');
 
-  const {data, isLoading, error} = useFetchAccountTransactionsQuery(
+  const {data, isLoading, error, isFetching} = useFetchAccountTransactionsQuery(
     fetchTransactionsParams);
 
   useEffect(() => {
@@ -77,10 +77,9 @@ const AccountDetails = ({ account, customerId }: TAccountDetailsProps) => {
         <Col><h6>Type: {account.accountType}</h6></Col>
         <Col><h6>Balance: {account.balance.toFixed(2)}</h6></Col>
       </Row>
-      <Row>
+      {isLoading ? <p>Loading...</p> : (<Row>
         <Row>
           <h5>Transactions</h5>
-          {isLoading && <p>Loading...</p>}
           {error && <p>Error occurred</p>}
         </Row>
         <Row className="mt-3">
@@ -137,15 +136,15 @@ const AccountDetails = ({ account, customerId }: TAccountDetailsProps) => {
             </Button>
           </Col>
         </Row>
-        <Row className="mt-3">
-          <TransactionsTable transactions={transactions} />
+        {isFetching ? <p>Loading...</p> : (<Row className="mt-3">
+          <TransactionsTable transactions={transactions}/>
           {totalPages > 0 && <TablePagination
             totalPages={totalPages}
             currentPage={currentPage + 1}
             onPageChange={handlePageChange}
           />}
-        </Row>
-      </Row>
+        </Row>)}
+      </Row>)}
     </Row>
   );
 };
