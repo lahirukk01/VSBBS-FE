@@ -74,6 +74,7 @@ const CustomerLoans = () => {
               <th>Loan Amount</th>
               <th>Number of EMIs</th>
               <th>Status</th>
+              <th>Manager Remarks</th>
               <th>Payment Status</th>
               <td>Action</td>
             </tr>
@@ -85,6 +86,7 @@ const CustomerLoans = () => {
                 <td>{loan.amount}</td>
                 <td>{loan.numberOfEmis}</td>
                 <td>{loan.status}</td>
+                <td>{loan.remarks}</td>
                 <td>{getPaymentStatusString(loan)}</td>
                 <td>
                   <Button onClick={() => handleLoanAction(loan, 'UPDATE')}>
