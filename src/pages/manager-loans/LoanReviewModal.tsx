@@ -97,7 +97,7 @@ const LoanReviewModal = ({ loan, onClose, onSubmit }: TLoanReviewModalProps) => 
   const {
     data: creditScoreData, isLoading: creditScoreIsLoading,
     error: creditScoreError
-  } = useManagerFetchCreditScoreQuery(loan.customerId, {
+  } = useManagerFetchCreditScoreQuery(loan.id, {
     skip: !fetchCreditScore
   });
 
