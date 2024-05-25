@@ -92,7 +92,7 @@ const CustomerLoans = () => {
                   <Button onClick={() => handleLoanAction(loan, 'UPDATE')}>
                     {loan.status === 'PENDING' ? 'Review' : 'View'}
                   </Button>
-                  {loan.status === 'APPROVED' && (
+                  {loan.status === 'APPROVED' && loan.paymentStatus !== 'PAID' && (
                     <Button
                       onClick={() => handleLoanAction(loan, 'PAYMENT')}
                       className="mx-2"
