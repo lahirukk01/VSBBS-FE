@@ -17,6 +17,7 @@ phases:
       - aws s3 rm s3://lkksoftdev-vsbba-fe --recursive
       - echo Copying the build output to the S3 bucket...
       - aws s3 sync dist s3://lkksoftdev-vsbba-fe
+      - aws cloudfront create-invalidation --distribution-id EVG2MQZUJYB96 --paths "/*"
 
 #artifacts:
 #  files:
