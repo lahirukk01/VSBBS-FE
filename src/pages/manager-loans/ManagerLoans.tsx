@@ -39,6 +39,7 @@ const ManagerLoans = () => {
               <th>Loan Amount</th>
               <th>Number of EMIs</th>
               <th>Status</th>
+              <th>Remarks</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -49,6 +50,7 @@ const ManagerLoans = () => {
                 <td>{loan.amount}</td>
                 <td>{loan.numberOfEmis}</td>
                 <td>{loan.status}</td>
+                <td>{loan.remarks}</td>
                 <td>
                   <Button onClick={() => setSelectedLoan(loan)}>
                     {loan.status === 'PENDING' ? 'Review' : 'View'}
