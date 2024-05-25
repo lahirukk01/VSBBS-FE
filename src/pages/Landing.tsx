@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useSearchParams} from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -8,11 +8,14 @@ import Tab from 'react-bootstrap/Tab';
 import AuthForm from '~/components/AuthForm/AuthForm.tsx';
 
 const Landing = () => {
-  const [selectedTab, setSelectedTab] = useState<string>('Login');
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const handleTabChange = (tabName: string | null) => {
-    setSelectedTab(tabName ?? 'Login');
+    setSearchParams({ selectedTab: tabName ?? 'Login' });
   };
+
+  const selectedTab = (searchParams.get('selectedTab') === 'Login' || !searchParams.get('selectedTab')) ?
+    'Login' : 'Register';
 
   return (
     <Container>
@@ -33,7 +36,7 @@ const Landing = () => {
               {selectedTab === 'Login' && <AuthForm />}
             </Tab>
             <Tab eventKey="Register" title="Register">
-              {selectedTab !== 'Login' && <AuthForm registration />}
+              {selectedTab === 'Register' && <AuthForm registration />}
             </Tab>
           </Tabs>
         </Col>
