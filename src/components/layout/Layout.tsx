@@ -44,7 +44,7 @@ const Component: React.FC<AuthComponentProps> = ({ auth, logout, setAuth }) => {
         </Col>
       </Row>
       <Row className="flex-grow-1">
-        <Col xs={2} style={{ backgroundColor: '#000044' }}>
+        <Col xs={2} style={{ background: 'linear-gradient(to top, #0000ff, #000000)' }}>
           <h3 className="text-white mt-3">Menu</h3>
           <Stack gap={3}>
             <div
