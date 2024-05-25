@@ -27,7 +27,7 @@ const Landing = () => {
       <Row className="justify-content-md-center">
         <Col xs lg="6">
           <Tabs
-            defaultActiveKey="Login"
+            defaultActiveKey={selectedTab}
             id="uncontrolled-tab-example"
             className="mb-3 d-flex justify-content-center"
             onSelect={handleTabChange}
